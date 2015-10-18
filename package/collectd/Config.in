@@ -349,6 +349,7 @@ config BR2_PACKAGE_COLLECTD_PING
 config BR2_PACKAGE_COLLECTD_POSTGRESQL
 	bool "postgresql"
 	select BR2_PACKAGE_POSTGRESQL
+	select BR2_PACKAGE_POSTGRESQL_CLIENT
 	help
 	  Connects to and executes SQL statements on a PostgreSQL
 	  database. It then reads back the results and, depending on the

@@ -58,6 +58,34 @@ POSTGRESQL_DEPENDENCIES += openssl
 POSTGRESQL_CONF_OPTS += --with-openssl
 endif
 
+ifeq ($(BR2_PACKAGE_POSTGRESQL_CLIENT),y)
+
+# Install the binaries:
+#  clusterdb
+#  createdb
+#  createlang
+#  createuser
+#  dropdb
+#  droplang
+#  dropuser
+#  ecpg
+#  pg_dump
+#  pg_dumpall
+#  pg_isready
+#  pg_restore
+#  psql
+#  reindexdb
+#  vacuumdb
+#
+# and the directories required to build them.
+POSTGRESQL_INSTALL_DIRECTORIES += \
+	config src/include src/interfaces src/port \
+	src/bin/pg_dump src/bin/psql src/bin/scripts src/bin/pg_config
+
+endif
+
+ifeq ($(BR2_PACKAGE_POSTGRESQL_SERVER),y)
+
 define POSTGRESQL_USERS
 	postgres -1 postgres -1 * /var/lib/pgsql /bin/sh - PostgreSQL Server
 endef
@@ -87,6 +115,49 @@ define POSTGRESQL_INSTALL_INIT_SYSTEMD
 	mkdir -p $(TARGET_DIR)/etc/systemd/system/multi-user.target.wants
 	ln -fs ../../../../usr/lib/systemd/system/postgresql.service \
 		$(TARGET_DIR)/etc/systemd/system/multi-user.target.wants/postgresql.service
+endef
+
+# Install the binaries:
+#  initdb
+#  pg_basebackup
+#  pg_controldata
+#  pg_ctl
+#  pg_receivexlog
+#  pg_recvlogical
+#  pg_resetxlog
+#  postgres
+#  postmaster
+#
+# and the directories required to build them.
+POSTGRESQL_INSTALL_DIRECTORIES += \
+	src/port src/common src/backend \
+	src/backend/utils/mb/conversion_procs \
+	src/backend/snowball src/backend/replication/libpqwalreceiver \
+	src/bin/initdb src/bin/pg_ctl \
+	src/bin/pg_controldata src/bin/pg_resetxlog src/pl \
+	src/bin/pg_basebackup
+
+ifeq ($(BR2_PACKAGE_TZDATA),y)
+POSTGRESQL_INSTALL_DIRECTORIES += src/timezone
+endif
+
+endif
+
+define POSTGRESQL_BUILD_CMDS
+	$(foreach d,$(POSTGRESQL_INSTALL_DIRECTORIES),
+		$(MAKE) -C $(@D)/$(d)$(sep))
+	# Required for the installation.
+	$(MAKE) -C $(@D)/src/backend ../../src/include/utils/fmgroids.h
+endef
+
+define POSTGRESQL_INSTALL_TARGET_CMDS
+	$(foreach d,$(POSTGRESQL_INSTALL_DIRECTORIES),
+		$(MAKE) -C $(@D)/$(d) DESTDIR=$(TARGET_DIR) install$(sep))
+endef
+
+define POSTGRESQL_INSTALL_STAGING_CMDS
+	$(foreach d,$(POSTGRESQL_INSTALL_DIRECTORIES),
+		$(MAKE) -C $(@D)/$(d) DESTDIR=$(STAGING_DIR) install$(sep))
 endef
 
 $(eval $(autotools-package))
