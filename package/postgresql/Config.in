@@ -5,6 +5,7 @@ config BR2_PACKAGE_POSTGRESQL
 	# postgresql is unlikely to be used in a pure statically
 	# linked environment.
 	depends on !BR2_STATIC_LIBS
+	select BR2_PACKAGE_POSTGRESQL_CLIENT if !BR2_PACKAGE_POSTGRESQL_SERVER
 	help
 	  PostgreSQL is a powerful, open source object-relational
 	  database system.
@@ -17,6 +18,22 @@ config BR2_PACKAGE_POSTGRESQL
 	  archives with pg_dump and pg_restore.
 
 	  http://www.postgresql.org
+
+if BR2_PACKAGE_POSTGRESQL
+
+config BR2_PACKAGE_POSTGRESQL_CLIENT
+	bool "PostgreSQL client libraries"
+	default y
+	help
+	  Install the PostgreSQL client libraries on the target.
+
+config BR2_PACKAGE_POSTGRESQL_SERVER
+	bool "PostgreSQL server"
+	default y
+	help
+	  Install the PostgreSQL server on the target.
+
+endif
 
 comment "postgresql needs a toolchain w/ dynamic library"
 	depends on BR2_STATIC_LIBS
