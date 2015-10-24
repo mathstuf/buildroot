@@ -23,7 +23,7 @@ HOST_PYTHON_CONF_OPTS += 	\
 	--disable-sqlite3	\
 	--disable-tk		\
 	--with-expat=system	\
-	--disable-curses	\
+	--enable-curses		\
 	--disable-codecs-cjk	\
 	--disable-nis		\
 	--enable-unicodedata	\
@@ -52,7 +52,7 @@ HOST_PYTHON_MAKE = $(MAKE1)
 
 PYTHON_DEPENDENCIES = host-python libffi
 
-HOST_PYTHON_DEPENDENCIES = host-expat host-zlib
+HOST_PYTHON_DEPENDENCIES = host-ncurses host-expat host-zlib
 
 PYTHON_INSTALL_STAGING = YES
 
