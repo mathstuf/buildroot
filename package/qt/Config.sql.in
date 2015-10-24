@@ -31,6 +31,7 @@ config BR2_PACKAGE_QT_ODBC
 config BR2_PACKAGE_QT_PSQL
 	bool "PostgreSQL Driver"
 	select BR2_PACKAGE_POSTGRESQL
+	select BR2_PACKAGE_POSTGRESQL_CLIENT
 	depends on !BR2_STATIC_LIBS
 	help
 	  Build PostgreSQL driver

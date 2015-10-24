@@ -158,6 +158,7 @@ comment "MySQL drivers need a toolchain w/ C++, threads"
 config BR2_PACKAGE_PHP_EXT_PDO_POSTGRESQL
 	bool "PostgreSQL"
 	select BR2_PACKAGE_POSTGRESQL
+	select BR2_PACKAGE_POSTGRESQL_CLIENT
 	depends on BR2_USE_MMU # postgresql
 	depends on !BR2_STATIC_LIBS
 	help
