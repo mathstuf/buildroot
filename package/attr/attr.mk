@@ -37,3 +37,4 @@ endef
 ATTR_POST_INSTALL_STAGING_HOOKS += ATTR_FIX_LIBTOOL_LA_LIBDIR
 
 $(eval $(autotools-package))
+$(eval $(host-autotools-package))
